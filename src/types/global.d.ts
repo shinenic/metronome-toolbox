@@ -2,6 +2,11 @@ import { NoteValue } from '../constants'
 
 export {}
 
+declare module '*.mp3' {
+  const value: any
+  export default value
+}
+
 declare global {
   type CB = () => void
 

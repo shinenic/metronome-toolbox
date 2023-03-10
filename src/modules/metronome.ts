@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react'
 import _ from 'lodash'
 import { Timer } from './timer'
 
+const timerWorker = new Worker('./timer2.ts')
+
 const getIntervalFromBpm = (bpm: number) => (60 / bpm) * 1000
 const getIntervalByTimeSignature =
   (timeSignature: TimeSignature) => (interval: number) =>
@@ -60,6 +62,7 @@ export const useMetronome = ({
   timeSignature: TimeSignature
 }) => {
   const [metronome, setMetronome] = useState<null | Metronome>(null)
+  const isStart = metronome !== null
 
   const stop = useCallback(() => {
     if (metronome) {
@@ -72,6 +75,19 @@ export const useMetronome = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(stop, [])
 
+  // useEffect(() => {
+  //   if (!isStart) {
+  //     return
+  //   }
+
+  //   stop()
+
+  //   setTimeout(() => {
+  //     start()
+  //   }, 500)
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [bpm, isStart])
+
   const start = useCallback(() => {
     if (metronome) {
       metronome.stop()
@@ -83,5 +99,5 @@ export const useMetronome = ({
     setMetronome(_metronome)
   }, [bpm, callback, metronome, timeSignature])
 
-  return { start, stop, isStart: metronome !== null }
+  return { start, stop, isStart }
 }

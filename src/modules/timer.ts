@@ -1,3 +1,5 @@
+let lastDateTime = 0
+
 export class Timer {
   isRunning: boolean
   interval: number
@@ -15,6 +17,7 @@ export class Timer {
   }
 
   private executeTimer() {
+    // version 1
     this.callback()
     const driftTime = Date.now() - this.expected
 
@@ -22,11 +25,20 @@ export class Timer {
       this.onTimeout?.()
     }
 
+    console.log(driftTime)
+
     this.expected += this.interval
     this.executingTimer = setTimeout(
       () => this.executeTimer(),
       Math.max(0, this.interval - driftTime)
     )
+
+    // version 2
+    // setInterval(() => {
+    //   console.log(Date.now() - lastDateTime - this.interval)
+    //   this.callback()
+    //   lastDateTime = Date.now()
+    // }, this.interval)
   }
 
   public setInterval(interval: number) {
