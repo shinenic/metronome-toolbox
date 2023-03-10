@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/shinenic/metronome-toolbox/static/css/main.a407afdf.css",
+    "main.js": "/shinenic/metronome-toolbox/static/js/main.99404f78.js",
+    "static/js/787.4ff5f4eb.chunk.js": "/shinenic/metronome-toolbox/static/js/787.4ff5f4eb.chunk.js",
+    "index.html": "/shinenic/metronome-toolbox/index.html",
+    "main.a407afdf.css.map": "/shinenic/metronome-toolbox/static/css/main.a407afdf.css.map",
+    "main.99404f78.js.map": "/shinenic/metronome-toolbox/static/js/main.99404f78.js.map",
+    "787.4ff5f4eb.chunk.js.map": "/shinenic/metronome-toolbox/static/js/787.4ff5f4eb.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a407afdf.css",
+    "static/js/main.99404f78.js"
+  ]
+}
