@@ -77,14 +77,14 @@ const beepInBeatAndMeasure: MetronomeCallback = (beat, measure) => {
 }
 
 function App() {
-  const [bpm, setBpm] = useState<number>(120)
+  const [bpm, setBpm] = useState<number>(80)
   const [activeIndex, setActiveIndex] = useState(0)
 
   const { start, stop, isStart } = useMetronome({
     bpm,
     callback: (beat, measure, audible, timeSignature) => {
-      setActiveIndex(beat - 1)
-      beepInBeatAndMeasure(beat, measure, audible, timeSignature)
+      // setActiveIndex(beat - 1)
+      // beepInBeatAndMeasure(beat, measure, audible, timeSignature)
     },
     timeSignature,
   })

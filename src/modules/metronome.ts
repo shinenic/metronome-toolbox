@@ -1,56 +1,22 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import _ from 'lodash'
 import { Timer } from './timer'
 
-const timerWorker = new Worker('./timer2.ts')
+import { createWorkerFactory, useWorker } from '@shopify/react-web-worker'
+import { Metro } from './Metro'
+
+type Metronome = any
+// const createWorker = createWorkerFactory(() => import('./myWorker'))
 
 const getIntervalFromBpm = (bpm: number) => (60 / bpm) * 1000
 const getIntervalByTimeSignature =
   (timeSignature: TimeSignature) => (interval: number) =>
     interval * timeSignature.denominator
 
-class Metronome {
-  timer: null | Timer = null
-
-  private getAccurateTimerInterval(bpm: number, timeSignature: TimeSignature) {
-    return _.flow(
-      getIntervalFromBpm,
-      getIntervalByTimeSignature(timeSignature)
-    )(bpm)
-  }
-
-  public stop() {
-    if (this.timer) {
-      this.timer.stop()
-    }
-  }
-
-  public start({
-    bpm,
-    callback,
-    timeSignature,
-  }: {
-    bpm: number
-    callback: MetronomeCallback
-    timeSignature: TimeSignature
-  }) {
-    const accurateInterval = this.getAccurateTimerInterval(bpm, timeSignature)
-
-    let count = 0
-    const timerCallback = () => {
-      callback(
-        (count % timeSignature.numerator) + 1,
-        Math.ceil(count / timeSignature.numerator) + 1,
-        true,
-        timeSignature
-      )
-      count += 1
-    }
-
-    this.timer = new Timer(accurateInterval, timerCallback)
-    this.timer.start()
-  }
-}
+// assume ./worker.ts contains
+// export function hello(name) {
+//  return `Hello, ${name}`;
+// }
 
 export const useMetronome = ({
   bpm,
@@ -61,6 +27,7 @@ export const useMetronome = ({
   callback: MetronomeCallback
   timeSignature: TimeSignature
 }) => {
+  // const worker = useWorker(createWorker)
   const [metronome, setMetronome] = useState<null | Metronome>(null)
   const isStart = metronome !== null
 
@@ -88,15 +55,31 @@ export const useMetronome = ({
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [bpm, isStart])
 
-  const start = useCallback(() => {
-    if (metronome) {
-      metronome.stop()
-    }
+  const start = useCallback(async () => {
+    const timerWorker = new Worker('./myWorker')
 
-    const _metronome = new Metronome()
-    _metronome.start({ bpm, callback, timeSignature })
+    // timerWorker.onmessage = function(e) {
+    //     if (e.data == "tick") {
+    //         // console.log("tick!");
+    //         scheduler();
+    //     }
+    //     else
+    //         console.log("message: " + e.data);
+    // };
+    timerWorker.postMessage({ interval: 'test' })
+    // if (metronome) {
+    //   metronome.stop()
+    // }
 
-    setMetronome(_metronome)
+    // const _metronome = await worker.start({
+    //   bpm,
+    //   callback,
+    //   timeSignature,
+    // })
+    // _metronome.start({ bpm, callback, timeSignature })
+
+    // setMetronome(_metronome)
+    // new Metro(120).start()
   }, [bpm, callback, metronome, timeSignature])
 
   return { start, stop, isStart }
